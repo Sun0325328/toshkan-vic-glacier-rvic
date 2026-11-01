@@ -1,2 +1,2 @@
 Temporary connection verification only. Not research code, data, or results.
-Stage: create
+Stage: update verified; scheduled for removal after readback.
