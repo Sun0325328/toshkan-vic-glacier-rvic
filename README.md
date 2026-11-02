@@ -31,12 +31,13 @@ land-surface calculation.
 
 ## Release Status
 
-This staged-release draft contains a small replacement calculation and synthetic
-tests. It is not an executable basin workflow or a complete reproduction package.
+This staged release contains small replacement and daily-routing calculations,
+with synthetic examples and tests. It is not an executable basin workflow or a
+complete reproduction package.
 
-## Planned First Module
+## Available Modules
 
-The first module will demonstrate the interface between glacier water release
+The first module demonstrates the interface between glacier water release
 and land-surface runoff, with a synthetic example and matching tests. Its purpose
 is to make the replacement of the corresponding land-surface contribution
 explicit, rather than adding glacier release on top of an unchanged baseline.
@@ -46,9 +47,17 @@ a release adaptation, not a byte-identical copy of the research runner. This mod
 connection between model components, not a standalone glacier model or the full
 basin simulation.
 
+The daily-routing module distributes aligned water volumes over arrival days
+using supplied lag weights. It retains the full arrival tail and converts daily
+volumes to daily mean flow. It is a small reference implementation, not the
+production routing engine or an RVIC parameter generator. The synthetic example
+connects replacement to routing without using research data. Static attenuation,
+real routing weights, and parameter calibration are not included.
+
 ## Repository Guide
 
 - [Method](docs/methods.md)
+- [Daily routing](docs/routing.md)
 - [Inputs and outputs](docs/inputs.md)
 - [Code origin and scope](docs/code_origin.md)
 
@@ -73,11 +82,14 @@ library. From the repository root on Linux or macOS:
 
 ```bash
 PYTHONPATH=src python -B examples/glacier_replacement_demo.py
+PYTHONPATH=src python -B examples/daily_routing_demo.py
 PYTHONPATH=src python -B -m unittest discover -s tests -v
 ```
 
 The synthetic example removes 30 from a baseline of 100 and adds 20, giving 90
 cubic metres of water per day. No hydrological model is launched.
+The routing example distributes those 90 cubic metres as 45, 27, and 18 over
+three consecutive days. All example values and routing weights are synthetic.
 
 For Windows PowerShell, set `$env:PYTHONPATH="src"` and run the same `python -B`
 commands without the `PYTHONPATH=src` prefix. The examples require Python 3;
