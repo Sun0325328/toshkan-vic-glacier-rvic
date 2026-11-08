@@ -56,6 +56,7 @@ real routing weights, and parameter calibration are not included.
 
 ## Repository Guide
 
+- [Workflow guide: setup, examples and coverage](docs/workflow_guide.md) | [Tested Python dependencies](requirements.txt)
 - [Method](docs/methods.md)
 - [Daily routing](docs/routing.md)
 - [Inputs and outputs](docs/inputs.md)

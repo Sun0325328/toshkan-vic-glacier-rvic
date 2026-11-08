@@ -1,0 +1,3 @@
+# Tested together with Python 3.12.14; not lower bounds or a full environment lock.
+numpy==2.3.5
+pandas==3.0.1
