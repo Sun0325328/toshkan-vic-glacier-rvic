@@ -33,6 +33,13 @@ class DailyForcingTests(unittest.TestCase):
         r = self.run_case(np.full(72, 4), melt_threshold_c=3)
         np.testing.assert_equal(r.positive_degree_days_c_day.to_numpy(), np.ones(3))
 
+    def test_positive_multiplier_on_a_dry_day(self):
+        dry = np.zeros(len(self.hours))
+        with self.assertRaisesRegex(ValueError, "multiplier must be positive"):
+            self.run_case(dry, dry, precipitation_multiplier=0)
+        outputs = self.run_case(dry, dry, precipitation_multiplier=0.5)
+        self.assertTrue((outputs[["snowfall_input_mm", "rain_input_mm"]] == 0).all().all())
+
     def test_calendar_faults(self):
         for h in (self.hours.delete(12), self.hours[:12].append(self.hours[11:71]),
                   self.hours[1:25], self.hours.tz_localize("UTC")):

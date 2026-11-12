@@ -31,7 +31,9 @@ def daily_forcing(hours, temperature_c, precipitation_mm, *, offset_c,
     offset, multiplier, lower, upper, threshold = params
     t = vector(temperature_c)
     p = vector(precipitation_mm)
-    if multiplier < 0 or upper <= lower or (p < 0).any():
+    if multiplier <= 0:
+        raise ValueError("precipitation multiplier must be positive")
+    if upper <= lower or (p < 0).any():
         raise ValueError("invalid precipitation or phase thresholds")
     with np.errstate(over="raise", invalid="raise", divide="raise"):
         t = (t + offset).reshape(-1, 24)

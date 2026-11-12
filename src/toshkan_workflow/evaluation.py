@@ -12,6 +12,16 @@ def compute_accuracy_metrics(observed: object, simulated: object) -> dict[str, f
         raise RuntimeError("expected one-dimensional observed and simulated discharge series")
     if obs.shape != sim.shape:
         raise RuntimeError("observed and simulated arrays have different shapes")
+    # Lists and arrays are positional. Check labeled pairs before filtering.
+    obs_index = getattr(observed, "index", None)
+    sim_index = getattr(simulated, "index", None)
+    if hasattr(obs_index, "equals") and hasattr(sim_index, "equals"):
+        if not obs_index.equals(sim_index):
+            raise ValueError("observed and simulated index labels or order differ")
+        if len(obs_index.dropna()) != len(obs_index):
+            raise ValueError("missing discharge index label")
+        if not obs_index.is_unique:
+            raise ValueError("expected a unique label for each discharge pair")
     valid = np.isfinite(obs) & np.isfinite(sim)
     obs = obs[valid]
     sim = sim[valid]

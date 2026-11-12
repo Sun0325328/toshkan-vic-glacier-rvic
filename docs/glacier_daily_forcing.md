@@ -3,7 +3,8 @@
 One call represents one band. Supply hourly grid air temperature (degrees C)
 and precipitation depth accumulated during each hour (mm, not a rate or a
 running total). Supply the already selected band offset and precipitation
-multiplier. Do not apply either adjustment before calling. The function
+multiplier. The multiplier must be positive, including on days with zero
+precipitation. Do not apply either adjustment before calling. The function
 cannot detect weather already adjusted upstream. It does not derive parameter
 values, match real grids, or remap bands as a glacier changes shape.
 

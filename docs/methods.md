@@ -1,7 +1,6 @@
 # Glacier and Land-Surface Runoff Replacement
 
-This draft accompanies a scalar replacement function and synthetic example.
-It does not implement the full research workflow.
+This note describes daily replacement for one date, area and scenario.
 
 ## Avoiding Double Counting
 
@@ -42,5 +41,5 @@ volumes to sum without reference to routing semantics.
 
 Replacement prepares water contributions for downstream routing. It does not
 calculate glacier melt, solve river routing, or estimate transmission losses.
-The first example will use synthetic inputs and will not reproduce the full
-research simulation or establish its physical accuracy.
+The [replacement example](../examples/glacier_replacement_demo.py) illustrates
+the calculation with synthetic component volumes.

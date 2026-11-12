@@ -14,6 +14,20 @@ add. Only divide the resulting daily volume by 86400 to report mean flow
 in cubic metres per second. The returned series includes the convolution
 tail and assumes no inflow before the supplied interval.
 
+If replacement almost cancels a large baseline, rounding the signed change
+can erase a small residual. When the coupled total is needed at that precision,
+retain the scalar replacement output `combined` for each source and day.
+Route that table directly with the same attenuation and lag weights:
+
+```python
+coupled = route_replacement(combined, combined * 0, weights, loss_per_day=rate)
+coupled_flow = coupled["mean_flow_m3_s"]
+```
+
+Here the first input already contains the coupled water volume. Use the total
+and mean flow from this call for the coupled hydrograph. For the original
+baseline and signed change, use the baseline-and-delta call described above.
+
 With src on PYTHONPATH run python examples/glacier_replacement_routing_demo.py.
 All example inputs are invented. Of 90 units after replacement, 45 arrive
 today and 22.5 tomorrow. The missing 22.5 represent modeled transmission

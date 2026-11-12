@@ -47,10 +47,13 @@ are needed.
 - Align day, spatial support and scenario before replacement. Use the returned
   combined volume for basic daily routing. For routing with attenuation, pass
   the baseline and signed increment separately. A negative increment is valid;
-  a negative final outlet volume raises an error.
+  a negative final outlet volume raises an error. If subtraction rounds away
+  a small residual, use the direct combined-volume procedure in
+  [replacement routing](glacier_replacement_routing.md).
 - Supply two aligned, one-dimensional series of daily mean discharge in m3/s for daily evaluation.
   Retain the routing tail and explicitly choose the overlapping evaluation dates.
-  Matching array lengths alone do not establish date alignment.
+  Two pandas Series must have matching, unique index labels in the same order.
+  With unlabeled inputs, check the dates before passing the values.
 
 ## What passing the tests establishes
 

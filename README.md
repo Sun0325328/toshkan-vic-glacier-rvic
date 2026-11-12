@@ -33,8 +33,7 @@ land-surface calculation.
 
 This release contains glacier process calculations from the Toshkan workflow,
 public interfaces for input preparation and routing, and a discharge evaluation
-function. The examples use synthetic inputs. The full basin run requires
-separately prepared inputs and orchestration.
+function. The examples and tests use synthetic inputs.
 
 ## Available Modules
 
@@ -58,21 +57,18 @@ separately prepared inputs and orchestration.
 - [Inputs and outputs](docs/inputs.md)
 - [Code origin and scope](docs/code_origin.md)
 
-See [Repository structure](docs/repository_structure.md) for the intended layout
-and the distinction between current documentation and planned code.
+See [Repository structure](docs/repository_structure.md) for the published modules,
+examples and tests.
 
 ## Scope and Attribution
 
 ### Licensing Status
 
-This repository is being assembled in stages. No open-source license is granted
-at this stage. A licensing decision will be made after the codebase has been
-consolidated and reviewed. This notice does not override GitHub's terms,
-applicable law, or any third-party licenses.
+No project-wide software license is granted. GitHub's terms, applicable law,
+and third-party licenses apply.
 
 VIC and RVIC are upstream models, not original models developed by this project.
-Project-specific workflow code will be distinguished from upstream components.
-Synthetic examples will be labelled separately from research results.
+The examples illustrate the project-specific calculations with synthetic inputs.
 
 The scalar replacement and basic daily-routing examples use the Python standard
 library. Install the dependencies for the full test suite and all nine examples.

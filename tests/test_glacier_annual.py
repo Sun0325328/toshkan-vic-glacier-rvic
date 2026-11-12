@@ -47,6 +47,14 @@ class AnnualTests(unittest.TestCase):
         self.assertEqual(result[2].shape, (2, 1))
         self.assertGreater(d['daily_sparse_grid_flux_m3']['total_release_mm'].sum(), 0.)
 
+    def test_year_requires_naive_midnight_dates(self):
+        days = pd.date_range("2000-01-01", periods=366)
+        self.assertFalse(annual.validate_cycle_calendar(days, 366, 10))
+        for bad in (days + pd.Timedelta(hours=12), days.tz_localize("UTC"),
+                    days.where(days != days[0])):
+            with self.subTest(first=bad[0]), self.assertRaisesRegex(ValueError, "midnight"):
+                annual.validate_cycle_calendar(bad, 366, 10)
+
     def test_checkpoint_roundtrip_exact(self):
         kw = example.synthetic_inputs()
         left = annual.run_resumable_one_year_daily_cycle(**kw)

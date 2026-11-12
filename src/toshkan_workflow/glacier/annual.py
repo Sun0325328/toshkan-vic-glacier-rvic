@@ -137,6 +137,8 @@ def validate_cycle_calendar(
     """Validate a full calendar year or one explicitly registered terminal year."""
     if not isinstance(dates, pd.DatetimeIndex) or len(dates) == 0:
         raise ValueError("one-year dates or checkpoint index failed")
+    if dates.tz is not None or dates.hasnans or not dates.equals(dates.normalize()):
+        raise ValueError("expected timezone-naive midnight dates without missing values")
     contiguous = dates.equals(pd.date_range(dates[0], periods=len(dates), freq="D"))
     starts_on_january_first = dates[0].month == 1 and dates[0].day == 1
     single_year = dates[0].year == dates[-1].year
