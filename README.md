@@ -31,28 +31,24 @@ land-surface calculation.
 
 ## Release Status
 
-This staged release contains small replacement and daily-routing calculations,
-with synthetic examples and tests. It is not an executable basin workflow or a
-complete reproduction package.
+This release contains glacier process calculations from the Toshkan workflow,
+public interfaces for input preparation and routing, and a discharge evaluation
+function. The examples use synthetic inputs. The full basin run requires
+separately prepared inputs and orchestration.
 
 ## Available Modules
 
-The first module demonstrates the interface between glacier water release
-and land-surface runoff, with a synthetic example and matching tests. Its purpose
-is to make the replacement of the corresponding land-surface contribution
-explicit, rather than adding glacier release on top of an unchanged baseline.
-The current function accepts one already aligned daily record. It does not load
-research files, allocate areas, select scenarios, or map routing sources. It is
-a release adaptation, not a byte-identical copy of the research runner. This module is a
-connection between model components, not a standalone glacier model or the full
-basin simulation.
-
-The daily-routing module distributes aligned water volumes over arrival days
-using supplied lag weights. It retains the full arrival tail and converts daily
-volumes to daily mean flow. It is a small reference implementation, not the
-production routing engine or an RVIC parameter generator. The synthetic example
-connects replacement to routing without using research data. Static attenuation,
-real routing weights, and parameter calibration are not included.
+- Hourly weather is converted to daily glacier inputs. The glacier modules
+  cover melt and release, thermal storage, annual aging, geometry updates
+  and aggregation of release volumes to model grids.
+- The scalar replacement function subtracts the VIC contribution on the
+  glacier-covered area and adds glacier-module release on the same area.
+- Two routing interfaces accept different inputs. `daily_routing.py` routes
+  nonnegative source volumes to their outlets. `routing_loss.py` routes a
+  baseline and signed replacement increments to one outlet, with attenuation
+  that depends on travel time. Both retain the full arrival tail.
+- The evaluation function compares aligned observed and simulated discharge
+  series for one outlet and scenario at a time.
 
 ## Repository Guide
 
@@ -78,10 +74,12 @@ VIC and RVIC are upstream models, not original models developed by this project.
 Project-specific workflow code will be distinguished from upstream components.
 Synthetic examples will be labelled separately from research results.
 
-Research inputs are not bundled here. The example uses only the Python standard
-library. From the repository root on Linux or macOS:
+The scalar replacement and basic daily-routing examples use the Python standard
+library. Install the dependencies for the full test suite and all nine examples.
+From the repository root on Linux or macOS:
 
 ```bash
+python -m pip install -r requirements.txt
 PYTHONPATH=src python -B examples/glacier_replacement_demo.py
 PYTHONPATH=src python -B examples/daily_routing_demo.py
 PYTHONPATH=src python -B -m unittest discover -s tests -v
@@ -94,4 +92,4 @@ three consecutive days. All example values and routing weights are synthetic.
 
 For Windows PowerShell, set `$env:PYTHONPATH="src"` and run the same `python -B`
 commands without the `PYTHONPATH=src` prefix. The examples require Python 3;
-the exact environment tested for this draft is recorded in the local review.
+the tested environment is listed in the [workflow guide](docs/workflow_guide.md).

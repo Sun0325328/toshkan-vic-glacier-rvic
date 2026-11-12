@@ -21,5 +21,6 @@ loss; tomorrow's 22.5 are delayed water, not another loss.
 
 This is a one-outlet method example, not the RVIC executable, a basin
 parameter set or a station hydrograph. Supply source volumes already on the
-correct area basis and group sources by destination before calling. No
-calibration, clipping or diagnosis of physical plausibility is performed.
+correct area basis and group sources by destination before calling. The function
+raises an error if the final outlet volume is negative on any arrival day,
+including the routing tail. Signed increments are retained in the output.

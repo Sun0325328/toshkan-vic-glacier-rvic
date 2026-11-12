@@ -40,3 +40,8 @@ class DischargeMetricsTests(unittest.TestCase):
 
     def test_shape_mismatch(self):
         with self.assertRaises(RuntimeError): score([1, 2, 3], [1, 2])
+
+    def test_rejects_same_shape_matrices_and_scalars(self):
+        for values in ([[1, 2], [3, 4]], 1.0):
+            with self.subTest(values=values), self.assertRaisesRegex(RuntimeError, "one-dimensional"):
+                score(values, values)

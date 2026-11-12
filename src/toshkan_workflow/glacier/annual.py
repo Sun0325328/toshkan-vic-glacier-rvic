@@ -8,7 +8,7 @@ from .daily import step_glacier_prepartitioned_daily_arrays
 from .thermal import (MASS_TOLERANCE_MM_WE, ThermalArrayParameters,
     apply_registered_balance_year_aging_arrays, close_monthly_thermal_mass_arrays, thermal_capacity_mm_we)
 from .state import STATE_FIELDS, total_storage_mm_we_arrays
-from .aggregation import aggregate_sparse_grid_flux_m3_day
+from .aggregation import _integer_indices, aggregate_sparse_grid_flux_m3_day
 
 
 CHECKPOINT_DAY_COUNT = 365
@@ -214,11 +214,11 @@ def run_resumable_one_year_daily_cycle(
         raise ValueError("one-year mass-state schema failed")
     area = np.asarray(area_m2, dtype=np.float64)
     debris = np.asarray(debris_fraction, dtype=np.float64)
-    support_index = np.asarray(forcing_support_index, dtype=np.int64)
+    support_index = _integer_indices(forcing_support_index)
     modes = np.asarray(lower_boundary_mode, dtype=str)
     fixed = np.asarray(fixed_lower_temperature_c, dtype=np.float64)
-    group_inverse = np.asarray(member_group_inverse, dtype=np.int64)
-    group_to_trajectory = np.asarray(member_to_trajectory, dtype=np.int64)
+    group_inverse = _integer_indices(member_group_inverse)
+    group_to_trajectory = _integer_indices(member_to_trajectory)
     if (
         any(values.shape != (state_count,) for values in (
             area, debris, support_index, modes, fixed, group_inverse,
@@ -294,7 +294,7 @@ def run_resumable_one_year_daily_cycle(
     if sparse_grid_support_index is not None or sparse_grid_support_count is not None:
         if sparse_grid_support_index is None or sparse_grid_support_count is None:
             raise ValueError("sparse grid support metadata must be supplied together")
-        sparse_index = np.asarray(sparse_grid_support_index, dtype=np.int64)
+        sparse_index = _integer_indices(sparse_grid_support_index)
         if (
             sparse_index.shape != (state_count,)
             or not isinstance(sparse_grid_support_count, int)

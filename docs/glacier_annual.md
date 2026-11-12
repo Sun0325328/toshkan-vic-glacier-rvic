@@ -2,8 +2,9 @@
 
 This addition connects the existing daily mass kernel to monthly thermal updates
 and year-end aging. It also exposes grid-volume aggregation. These are project
-operators, not redistributed VIC or RVIC source code. Function bodies are
-extracted unchanged; imports now refer to this package. Examples and tests are new.
+operators extracted from the research workflow. Imports refer to the public
+package. The annual and aggregation interfaces also validate integer indices
+before conversion. Examples and tests are specific to this release.
 
 ## Place in the workflow
 
@@ -96,8 +97,7 @@ operator; its current source is separately hash-pinned locally rather than being
 a row in that frozen registry. Do not treat import linkage as an independent
 historical binary-reproduction claim. Local source records are not distributed.
 
-Original guards and floating-point tolerances are retained. They are not a new
-comprehensive public schema: callers must enforce typed indices, midnight daily
+The original floating-point tolerances are retained. Callers must supply midnight daily
 dates, valid dimensions, independently justified physical inputs and finite outputs.
 Extreme finite values may overflow. The AC02 mass check can be sensitive to
 floating-point summation at very large stores; no threshold has been relaxed here.

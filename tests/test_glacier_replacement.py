@@ -27,6 +27,13 @@ class ReplacementTests(unittest.TestCase):
             expected = sum(values[:4]) - sum(values[4:])
             self.assertEqual(self.run_case()["replacement_increment"], expected)
 
+    def test_small_release_after_full_removal(self):
+        self.removed = dict.fromkeys(LAND_COMPONENTS, 0)
+        self.removed["runoff_rain"] = 1e16
+        self.glacier = dict.fromkeys(GLACIER_COMPONENTS, 0)
+        self.glacier["ice_release"] = 1
+        self.assertEqual(self.run_case(1e16)["combined"], 1)
+
     def test_units(self):
         with self.assertRaises(ValueError):
             self.run_case(units="mm/day")

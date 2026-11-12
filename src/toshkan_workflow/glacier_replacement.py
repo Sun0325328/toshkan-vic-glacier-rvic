@@ -45,7 +45,7 @@ def replace_daily_water(baseline, removed, glacier, *, units):
     if removed_total > baseline:
         raise ValueError("Removed contribution exceeds the corresponding baseline")
     increment = glacier_total - removed_total
-    combined = _amount(baseline + increment)
+    combined = _amount((baseline - removed_total) + glacier_total)
     return {
         "removed": removed_total,
         "glacier_release": glacier_total,

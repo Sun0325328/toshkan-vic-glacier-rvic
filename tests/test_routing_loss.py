@@ -31,6 +31,15 @@ class RoutingTests(unittest.TestCase):
     def test_no_attenuation(self):
         np.testing.assert_allclose(self.run_case(0).total_m3_day, [45, 45, 12])
 
+    def test_negative_total_rejected_in_arrival_tail(self):
+        self.d.loc[self.d.index[-1], "B"] = -9.
+        with self.assertRaisesRegex(ValueError, "negative total volume"):
+            self.run_case(0)
+
+    def test_exact_cancellation_is_valid(self):
+        self.d = -self.b
+        np.testing.assert_array_equal(self.run_case().total_m3_day, [0., 0., 0.])
+
     def test_alignment(self):
         for d in (self.d.iloc[::-1], self.d.iloc[:, ::-1]):
             with self.assertRaises(ValueError):

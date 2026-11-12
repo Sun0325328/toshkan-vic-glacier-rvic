@@ -3,6 +3,15 @@ from __future__ import annotations
 import numpy as np
 
 
+def _integer_indices(values: np.ndarray) -> np.ndarray:
+    indices = np.asarray(values)
+    if indices.dtype.kind not in "iu":
+        raise ValueError("expected integer indices")
+    if indices.dtype.kind == "u" and np.any(indices > np.uint64(np.iinfo(np.int64).max)):
+        raise ValueError("indices exceed the signed 64-bit range")
+    return indices.astype(np.int64, copy=False)
+
+
 def aggregate_sparse_grid_flux_m3_day(
     values_mm: np.ndarray,
     area_m2: np.ndarray,
@@ -13,7 +22,7 @@ def aggregate_sparse_grid_flux_m3_day(
     """Aggregate unit fluxes directly onto registered sparse support rows."""
     values = np.asarray(values_mm, dtype=np.float64)
     area = np.asarray(area_m2, dtype=np.float64)
-    support = np.asarray(sparse_support_index, dtype=np.int64)
+    support = _integer_indices(sparse_support_index)
     state_count = len(values)
     if (
         state_count == 0
@@ -46,8 +55,8 @@ def aggregate_grid_flux_m3_day(
     """Aggregate nonnegative unit fluxes to trajectory-grid volume fluxes."""
     values = np.asarray(values_mm, dtype=np.float64)
     area = np.asarray(area_m2, dtype=np.float64)
-    trajectories = np.asarray(trajectory_index, dtype=np.int64)
-    grids = np.asarray(grid_index, dtype=np.int64)
+    trajectories = _integer_indices(trajectory_index)
+    grids = _integer_indices(grid_index)
     state_count = len(values)
     if (
         state_count == 0

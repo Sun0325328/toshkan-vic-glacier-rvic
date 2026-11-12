@@ -33,6 +33,8 @@ def route_replacement(baseline, delta, weights, *, loss_per_day):
     total = base + correction
     if not all(np.isfinite(x).all() for x in (base, correction, total)):
         raise ValueError("nonfinite routed result")
+    if (total < 0).any():
+        raise ValueError("negative total volume at the outlet after routing")
     return pd.DataFrame({"baseline_m3_day": base, "delta_m3_day": correction,
                          "total_m3_day": total, "mean_flow_m3_s": total / 86400},
                         index=pd.date_range(dates[0], periods=len(total), freq="D"))

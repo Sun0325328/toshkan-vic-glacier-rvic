@@ -116,6 +116,24 @@ class AnnualTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             aggregation.aggregate_sparse_grid_flux_m3_day(args[0], args[1], np.array([0, 1]), sparse_support_count=1)
 
+    def test_grid_ids_are_checked_before_conversion(self):
+        for ids in ([0.9], [True], np.array([2**64 - 1], dtype=np.uint64)):
+            with self.subTest(ids=ids):
+                with self.assertRaises(ValueError):
+                    aggregation.aggregate_sparse_grid_flux_m3_day([1.], [1000.], ids, sparse_support_count=1)
+                for trajectory, grid in ((ids, [0]), ([0], ids)):
+                    with self.assertRaises(ValueError):
+                        aggregation.aggregate_grid_flux_m3_day([1.], [1000.], trajectory, grid,
+                                                               trajectory_count=1, grid_count=1)
+
+    def test_annual_entry_preserves_index_validation(self):
+        for key in ("sparse_grid_support_index", "forcing_support_index",
+                    "member_to_trajectory", "member_group_inverse"):
+            inputs = example.synthetic_inputs()
+            inputs[key] = inputs[key].astype(float) + 0.9
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, "integer indices"):
+                example.run_resumable_one_year_daily_cycle(**inputs)
+
     def test_thermal_debit_and_boundary(self):
         kw = example.synthetic_inputs()
         t, p = kw['thermal_temperature_c'], kw['thermal_parameters']

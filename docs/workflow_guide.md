@@ -27,6 +27,8 @@ are needed.
 
 | Question | Example | Method and boundary |
 | --- | --- | --- |
+| How do hourly temperature and precipitation become daily inputs for one elevation band? | [glacier_daily_forcing_demo.py](../examples/glacier_daily_forcing_demo.py) | [Daily forcing](glacier_daily_forcing.md) partitions hourly precipitation and accumulates positive degree days. |
+| How do signed glacier increments affect outlet flow after transmission loss? | [glacier_replacement_routing_demo.py](../examples/glacier_replacement_routing_demo.py) | [Replacement routing](glacier_replacement_routing.md) routes the baseline and signed change with the same lag-dependent attenuation. |
 | How do daily depths become routing inputs? | [prepare_routing_inputs_demo.py](../examples/prepare_routing_inputs_demo.py) | [Input preparation](input_preparation.md): the caller supplies the spatial mapping. This is a baseline example, not glacier replacement. |
 | What can melt, remain stored or be released today? | [glacier_daily_demo.py](../examples/glacier_daily_demo.py) | [Daily glacier kernel](glacier_daily.md): consumes prepared phase and positive degree days, not raw weather. |
 | How are starting states assembled and glacier geometry updated? | [glacier_year_boundary_demo.py](../examples/glacier_year_boundary_demo.py) | [Year boundary](glacier_year_boundary.md): assembly is not historical initial-mass reconstruction. |
@@ -40,10 +42,13 @@ are needed.
 - A depth in mm over an applicable area in m2 gives water volume in m3 as
   `depth * area / 1000`. The annual module's daily grid-volume output is already
   in m3 per day: do not apply the conversion again or sum alternative branches.
-- For replacement, align day, spatial support and scenario before subtraction.
-  The net change may be negative; it is not the nonnegative total water input
-  expected by the published routing function.
-- Use routed daily mean discharge in m3/s for evaluation, not m3 per day.
+- Use integer grid, support and trajectory indices. The sparse aggregation
+  interface reserves -1 for excluded rows.
+- Align day, spatial support and scenario before replacement. Use the returned
+  combined volume for basic daily routing. For routing with attenuation, pass
+  the baseline and signed increment separately. A negative increment is valid;
+  a negative final outlet volume raises an error.
+- Supply two aligned, one-dimensional series of daily mean discharge in m3/s for daily evaluation.
   Retain the routing tail and explicitly choose the overlapping evaluation dates.
   Matching array lengths alone do not establish date alignment.
 

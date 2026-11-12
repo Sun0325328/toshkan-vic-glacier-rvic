@@ -8,6 +8,8 @@ def compute_accuracy_metrics(observed: object, simulated: object) -> dict[str, f
     """Compute the frozen metric set after finite pairwise selection."""
     obs = np.asarray(observed, dtype=float)
     sim = np.asarray(simulated, dtype=float)
+    if obs.ndim != 1 or sim.ndim != 1:
+        raise RuntimeError("expected one-dimensional observed and simulated discharge series")
     if obs.shape != sim.shape:
         raise RuntimeError("observed and simulated arrays have different shapes")
     valid = np.isfinite(obs) & np.isfinite(sim)
